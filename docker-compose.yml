@@ -3,49 +3,50 @@ version: '2'
 services:
   redis:
     restart: always
-    image: sameersbn/redis:latest
+    image: redis:alpine
     command:
-    - --loglevel warning
+      - --loglevel warning
     volumes:
-    - /srv/docker/gitlab/redis:/var/lib/redis:Z
+      - /srv/docker/gitlab/redis:/var/lib/redis:Z
 
   postgresql:
     restart: always
-    image: sameersbn/postgresql:9.6-2
+    image: registry.sys.inoc.com:5443/postgresql:10
     volumes:
-    - /srv/docker/gitlab/postgresql:/var/lib/postgresql:Z
+      - ./conf/add_extension.sql:/
+      - /srv/docker/gitlab/postgresql:/var/lib/postgresql:Z
     environment:
-    - DB_USER=gitlab
-    - DB_PASS=password
-    - DB_NAME=gitlabhq_production
-    - DB_EXTENSION=pg_trgm
+      - DB_USER=gitlab
+      - DB_PASS=x1dozah7Ta5ooRah6vanguf
+      - DB_NAME=gitlabhq_production
+      - DB_EXTENSION=pg_trgm
 
   gitlab:
     restart: always
     image: sameersbn/gitlab:10.2.2
     depends_on:
-    - redis
-    - postgresql
+      - redis
+      - postgresql
     ports:
-    - "10080:80"
-    - "10022:22"
+      - "10080:80"
+      - "10022:22"
     volumes:
-    - /srv/docker/gitlab/gitlab:/home/git/data:Z
+      - /srv/docker/gitlab/gitlab:/home/git/data:Z
     environment:
-    - DEBUG=false
+      - DEBUG=false
 
     - DB_ADAPTER=postgresql
     - DB_HOST=postgresql
     - DB_PORT=5432
     - DB_USER=gitlab
-    - DB_PASS=password
+    - DB_PASS=x1dozah7Ta5ooRah6vanguf
     - DB_NAME=gitlabhq_production
 
     - REDIS_HOST=redis
     - REDIS_PORT=6379
 
-    - TZ=Asia/Kolkata
-    - GITLAB_TIMEZONE=Kolkata
+    - TZ=America/Chicago
+    - GITLAB_TIMEZONE=Chicago
 
     - GITLAB_HTTPS=false
     - SSL_SELF_SIGNED=false
@@ -54,9 +55,9 @@ services:
     - GITLAB_PORT=10080
     - GITLAB_SSH_PORT=10022
     - GITLAB_RELATIVE_URL_ROOT=
-    - GITLAB_SECRETS_DB_KEY_BASE=long-and-random-alphanumeric-string
-    - GITLAB_SECRETS_SECRET_KEY_BASE=long-and-random-alphanumeric-string
-    - GITLAB_SECRETS_OTP_KEY_BASE=long-and-random-alphanumeric-string
+    - GITLAB_SECRETS_DB_KEY_BASE=eijooh7miekiezis5loo2ochu0feesheich5puivool3eish1vieGiejahCh6kie
+    - GITLAB_SECRETS_SECRET_KEY_BASE=yei9waepa9ceez9Oorooth3va5EeGohNaum7Zoh2oizaemaitie2Vu6peem2air4
+    - GITLAB_SECRETS_OTP_KEY_BASE=thohc5iep7mau3dul4pachiet4Sooquae8aichahbishaeh1jai9Li6kae1eipha
 
     - GITLAB_ROOT_PASSWORD=
     - GITLAB_ROOT_EMAIL=
@@ -64,9 +65,9 @@ services:
     - GITLAB_NOTIFY_ON_BROKEN_BUILDS=true
     - GITLAB_NOTIFY_PUSHER=false
 
-    - GITLAB_EMAIL=notifications@example.com
-    - GITLAB_EMAIL_REPLY_TO=noreply@example.com
-    - GITLAB_INCOMING_EMAIL_ADDRESS=reply@example.com
+    - GITLAB_EMAIL=gitlab-notifications@inoc.com
+    - GITLAB_EMAIL_REPLY_TO=noreply@inoc.com
+    - GITLAB_INCOMING_EMAIL_ADDRESS=gitlab-reply@inoc.com
 
     - GITLAB_BACKUP_SCHEDULE=daily
     - GITLAB_BACKUP_TIME=01:00
